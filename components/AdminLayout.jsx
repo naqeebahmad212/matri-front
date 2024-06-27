@@ -23,7 +23,7 @@ const AdminLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className={``}>
+    <div>
       <Toaster position="top-center" />
 
       <div className="flex flex-col h-screen lg:flex-row md:overflow-hidden ">
