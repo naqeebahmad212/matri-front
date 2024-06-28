@@ -1,5 +1,5 @@
 // components/AdminLayout.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import Sidebar from "./sidebar";
 import NavbarComp from "./navbar";
@@ -8,7 +8,9 @@ import { backendUrl } from "@/url";
 
 const AdminLayout = ({ children }) => {
   const router = useRouter();
+  const [isLoading, setIsloading] = useState(false);
 
+  setIsloading(true);
   useEffect(() => {
     fetch(backendUrl + "/admin/checkLogin", {
       method: "GET",
@@ -16,6 +18,7 @@ const AdminLayout = ({ children }) => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setIsloading(false);
         if (data.error) {
           router.push("/login");
         }
@@ -23,19 +26,23 @@ const AdminLayout = ({ children }) => {
   }, []);
 
   return (
-    <div>
-      <Toaster position="top-center" />
+    <>
+      {!isLoading && (
+        <div>
+          <Toaster position="top-center" />
 
-      <div className="flex flex-col h-screen lg:flex-row md:overflow-hidden ">
-        <div className="w-full flex-none hidden lg:block lg:w-[245px]">
-          <Sidebar />
+          <div className="flex flex-col h-screen lg:flex-row md:overflow-hidden ">
+            <div className="w-full flex-none hidden lg:block lg:w-[245px]">
+              <Sidebar />
+            </div>
+            <div className="flex-grow overflow-auto">
+              <NavbarComp />
+              <div className="p-4 md:py-7 md:px-7">{children}</div>
+            </div>
+          </div>
         </div>
-        <div className="flex-grow overflow-auto">
-          <NavbarComp />
-          <div className="p-4 md:py-7 md:px-7">{children}</div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
